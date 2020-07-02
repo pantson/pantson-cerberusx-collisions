@@ -1,0 +1,48 @@
+Strict
+
+Function CollidePointInRect:Bool(px:Float,py:Float,x:Float,y:Float,w:Float,h:Float)
+	Return CollideRectInRect(px,py,1,1,x,y,w,h)
+End
+
+' just something i know
+Function CollideRectInRect:Bool(x1:Float,y1:Float,w1:Float,h1:Float,x2:Float,y2:Float,w2:Float,h2:Float)
+	If x1+w1 < x2 Then Return False
+	If y1+h1 < y2 Then Return False
+	
+	If x2+w2 < x1 Then Return False
+	If y2+h2 < y1 Then Return False
+	
+	Return True
+End
+
+' just something i know
+Function CollideCircleInRect:Bool(cx:Float,cy:Float,r:Float,x:Float,y:Float,w:Float,h:Float)
+	' quick to see if center of circle in rect
+	If CollidePointInRect(cx,cy,x,y,w,h)=True Then Return True
+	
+	' closet point in rect to cx,cy
+	Local nx:Float = Max(x,Min(cx,x+w))
+	Local ny:Float = Max(y,Min(cy,y+h))
+	
+	' check if nx,ny to cx,cy is closer then r
+	If ( (nx-cx)*(nx-cx) + (ny-cy)*(ny-cy) )<(r*r) Then Return True
+	
+	Return False
+End
+
+' from forum: https://www.cerberus-x.com/community/threads/circle-to-circle-collisions.1083/post-8709
+Function CollideCircleInCircle:Bool(x1:Float, y1:Float, r1:Float, x2:Float, y2:Float, r2:Float)
+    Local xf:Float
+    Local yf:Float
+    Local rf:Float
+   
+    xf = x1 - x2
+    xf *= xf
+    yf = y1 - y2
+    yf *= yf
+    rf = r1 + r2
+    rf *= rf
+    If (xf+yf) < rf Then Return True
+    Return False
+End
+

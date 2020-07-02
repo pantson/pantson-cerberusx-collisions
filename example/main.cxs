@@ -1,0 +1,68 @@
+Strict
+
+Import mojo2
+Import collisions
+
+Class myClass Extends App
+	Field cnvs:Canvas
+	Field mode:Int
+	Field collide:Bool
+	Field mx:Int,my:Int
+	
+    Method OnCreate:Int()
+        SetUpdateRate(60)				
+        cnvs = New Canvas
+        Return 0
+    End
+
+    Method OnUpdate:Int()
+    	mx = MouseX()
+    	my = MouseY()
+    	
+    	Select mode
+    	Case 0
+    		collide = CollidePointInRect(mx,my,100,100,300,300)
+    	Case 1
+    		collide = CollideRectInRect(mx-50,my-50,100,100,100,100,300,300)
+    	Case 2
+    		collide = CollideCircleInRect(mx,my,40,100,100,300,300)
+    	End
+    	
+    	If KeyHit(KEY_SPACE) Then mode=(mode + 1) Mod 3
+        Return 0
+    End
+    
+    Method OnRender:Int()
+        cnvs.Clear (0,0.5,0)	
+        
+        cnvs.SetColor 1,1,0
+        cnvs.DrawRect 100,100,300,300
+        
+        cnvs.SetColor 1,0,1
+        Select mode
+        Case 0
+	        cnvs.DrawText "POINT COLLISION",20,20
+        	cnvs.DrawRect mx,my,1,1
+        Case 1
+	        cnvs.DrawText "RECT COLLISION",20,20
+        	cnvs.DrawRect mx-50,my-50,100,100
+        Case 2
+	        cnvs.DrawText "CIRCLE COLLISION",20,20
+        	cnvs.DrawCircle mx,my,40
+        End
+        
+        If collide Then cnvs.DrawText "COLLIDE!!",20,40
+        
+        cnvs.SetColor 1,1,1
+        cnvs.DrawText "PRESS SPACE TO CHANGE MODE",20,450
+        
+        cnvs.Flush
+
+        Return 0
+    End
+End
+
+Function Main:Int()
+    New myClass		
+    Return 0
+End
